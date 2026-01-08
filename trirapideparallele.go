@@ -1,3 +1,17 @@
+
+import (
+    "fmt"
+    "runtime"
+)
+
+func main() {
+    nbCoeurs := runtime.NumCPU()
+    fmt.Printf("Votre machine a %d cœurs logiques.\n", nbCoeurs)
+}
+
+
+
+
 func partition(l []int) int {
     pivot := l[0]
     i := 1
@@ -46,3 +60,4 @@ func TriRapideParallele (liste []int, wg *sync.WaitGroup){
 	}
 
 }
+
