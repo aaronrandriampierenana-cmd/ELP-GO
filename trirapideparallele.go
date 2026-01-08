@@ -34,7 +34,7 @@ func TriRapideParallele (liste []int, wg *sync.WaitGroup){
 	}
 	index:=partition(liste)
 	if len(liste)>1000{
-		subWg := &sync.WaitGroup
+		subWg := &sync.WaitGroup{}
 		subWg.Add(2)
 		go TriRapideParallele(liste[:index],subWg)
 		go TriRapideParallele(liste[index+1:],subWg)
@@ -44,4 +44,5 @@ func TriRapideParallele (liste []int, wg *sync.WaitGroup){
 		QuickSortSeq(liste[:index])
 		QuickSortSeq(liste[index+1:])
 	}
+
 }
