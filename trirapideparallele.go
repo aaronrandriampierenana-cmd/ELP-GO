@@ -1,14 +1,7 @@
-
 import (
-    "fmt"
-    "runtime"
+	"runtime"
+	"sync"
 )
-
-func main() {
-    nbCoeurs := runtime.NumCPU()
-    fmt.Printf("Votre machine a %d cœurs logiques.\n", nbCoeurs)
-}
-
 
 
 
@@ -41,23 +34,29 @@ func QuickSortSeq(l []int) {
 }
 
 
-func TriRapideParallele (liste []int, wg *sync.WaitGroup){
-	defer wg.Done()
-	if len(liste)<2{
-		return
-	}
-	index:=partition(liste)
-	if len(liste)>1000{
-		subWg := &sync.WaitGroup{}
-		subWg.Add(2)
-		go TriRapideParallele(liste[:index],subWg)
-		go TriRapideParallele(liste[index+1:],subWg)
-		subWg.Wait()
-	}
-	else {
-		QuickSortSeq(liste[:index])
-		QuickSortSeq(liste[index+1:])
-	}
 
+func TriParallele(liste[]) []int{
+	NbCoeurs := runtime.NumCPU()
+	if len(liste)<100*NbCoeurs{
+		QuickSortSeq(liste)
+		return liste
+	}
+	var wg sync.Waitgroup{}
+	wg.Add(NbCoeurs)
+	taille := len(liste)/NbCoeurs
+	segments := make([][]int,NbCoeurs)
+	for i:=0;i<NbCoeurs;i++{
+		deb := i*taille
+		fin := (i+1)*taille
+		if i == NbCoeurs-1{
+			fin = len(liste)
+		}
+		segments[i]=liste[deb:fin]
+		go func(partie []int){
+			defer wg.Done()
+			QuickSortSeq(partie)
+		}(segment[i])
+	}
+	wg.Wait()
+	return FusionnerSegments(segments)
 }
-
